@@ -1,5 +1,4 @@
-[![Test](https://github.com/Wang-Cankun/nestjs-prisma/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Wang-Cankun/nestjs-prisma/actions/workflows/test.yml)  [![codecov](https://codecov.io/gh/Wang-Cankun/nestjs-prisma/branch/master/graph/badge.svg?token=RJZCHZES7V)](https://codecov.io/gh/Wang-Cankun/nestjs-prisma)
-
+[![Test](https://github.com/Wang-Cankun/nestjs-prisma/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Wang-Cankun/nestjs-prisma/actions/workflows/test.yml)  [![codecov](https://codecov.io/gh/Wang-Cankun/nestjs-prisma/branch/master/graph/badge.svg?token=JeKFL0ql43)](https://codecov.io/gh/Wang-Cankun/nestjs-prisma)
 # nestjs-prisma
 
 ## Description
