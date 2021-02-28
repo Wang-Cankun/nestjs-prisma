@@ -21,4 +21,8 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect('Prisma example using NestJS.')
   })
+
+  afterAll(async () => {
+    await app.close()
+  })
 })
