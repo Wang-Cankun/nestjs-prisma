@@ -1,8 +1,13 @@
 -- CreateTable
 CREATE TABLE `User` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191),
+    `password` VARCHAR(191) NOT NULL,
+    `firstname` VARCHAR(191),
+    `lastname` VARCHAR(191),
+    `role` ENUM('ADMIN', 'USER') NOT NULL,
 UNIQUE INDEX `User.email_unique`(`email`),
 
     PRIMARY KEY (`id`)
@@ -10,11 +15,13 @@ UNIQUE INDEX `User.email_unique`(`email`),
 
 -- CreateTable
 CREATE TABLE `Post` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `published` BOOLEAN NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `content` VARCHAR(191),
-    `published` BOOLEAN DEFAULT false,
-    `authorId` INTEGER,
+    `authorId` VARCHAR(191),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

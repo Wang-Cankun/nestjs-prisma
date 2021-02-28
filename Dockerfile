@@ -1,19 +1,26 @@
-# Start with a Node.js base image that uses Node v13
-FROM node:14
-WORKDIR /usr/src/app
+FROM node:12 AS builder
 
-# Copy the package.json file to the container and install fresh node_modules
-COPY package*.json tsconfig*.json ./
+# Create app directory
+WORKDIR /app
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Install app dependencies
 RUN npm install
+# Required if not done in postinstall
+# RUN npx prisma generate
 
-# Copy the rest of the application source code to the container
-COPY src/ src/
+COPY . .
 
-# Transpile typescript and bundle the project
 RUN npm run build
 
-# Remove the original src directory (our new compiled source is in the `dist` folder)
-RUN rm -r src
+FROM node:12
 
-# Assign `npm run start:prod` as the default command to run when booting the container
-CMD ["npm", "run", "start:prod"]
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 3000
+CMD [ "npm", "run", "start:prod" ]
