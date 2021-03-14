@@ -11,6 +11,13 @@ type Auth {
   user: User!
 }
 
+type Author {
+  firstName: String
+  id: Int!
+  lastName: String
+  posts: [Post!]
+}
+
 input ChangePasswordInput {
   newPassword: String!
   oldPassword: String!
@@ -29,6 +36,7 @@ type Mutation {
   login(data: LoginInput!): Auth!
   refreshToken(token: String!): Token!
   signup(data: SignupInput!): Auth!
+  updatePost(upDatePostData: UpdatePostInput!): Author!
   updateUser(data: UpdateUserInput!): User!
 }
 
@@ -59,6 +67,7 @@ type Post {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: Date!
+  votes: Int
 }
 
 type PostConnection {
@@ -88,7 +97,11 @@ enum PostOrderField {
 }
 
 type Query {
+  author(firstName: String, id: Int = 114514, lastName: String = "defaultLastName"): Author!
+  getMe: Author!
   hello(name: String!): String!
+  hello2(id: String!): String!
+  hello3(id: String!): String!
   helloWorld: String!
   me: User!
   post(postId: String!): Post!
@@ -115,6 +128,10 @@ type Token {
 
   """JWT refresh token"""
   refreshToken: String!
+}
+
+input UpdatePostInput {
+  postId: Int!
 }
 
 input UpdateUserInput {

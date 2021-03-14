@@ -5,10 +5,10 @@ import { Type } from '@nestjs/common'
 export default function Paginated<TItem>(TItemClass: Type<TItem>) {
   @ObjectType(`${TItemClass.name}Edge`)
   abstract class EdgeType {
-    @Field((type) => String)
+    @Field((_) => String)
     cursor: string
 
-    @Field((type) => TItemClass)
+    @Field((_) => TItemClass)
     node: TItem
   }
 

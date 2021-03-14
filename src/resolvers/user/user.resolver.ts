@@ -1,19 +1,20 @@
-import { PrismaService } from './../../services/prisma.service'
-import { GqlAuthGuard } from '../../guards/gql-auth.guard'
-import {
-  Resolver,
-  Query,
-  Parent,
-  Mutation,
-  Args,
-  ResolveField
-} from '@nestjs/graphql'
 import { UseGuards } from '@nestjs/common'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver
+} from '@nestjs/graphql'
+import { loggerMiddleware } from '../../common/middleware/logger.middleware'
 import { UserEntity } from '../../decorators/user.decorator'
+import { GqlAuthGuard } from '../../guards/gql-auth.guard'
 import { User } from '../../models/user.model'
+import { UserService } from '../../services/user.service'
+import { PrismaService } from './../../services/prisma.service'
 import { ChangePasswordInput } from './dto/change-password.input'
 import { UpdateUserInput } from './dto/update-user.input'
-import { UserService } from '../../services/user.service'
 
 @Resolver((of) => User)
 @UseGuards(GqlAuthGuard)
@@ -50,7 +51,7 @@ export class UserResolver {
     )
   }
 
-  @ResolveField('posts')
+  @ResolveField(() => String, { middleware: [loggerMiddleware] })
   posts(@Parent() author: User) {
     return this.prisma.user.findUnique({ where: { id: author.id } }).posts()
   }
