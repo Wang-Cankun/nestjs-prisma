@@ -27,6 +27,7 @@ import { AppService } from './services/app.service'
             graphqlConfig.schemaDestination || './src/schema.graphql',
           debug: graphqlConfig.debug,
           playground: graphqlConfig.playgroundEnabled,
+          installSubscriptionHandlers: graphqlConfig.subscriptionEnabled,
           context: ({ req }) => ({ req })
         }
       },

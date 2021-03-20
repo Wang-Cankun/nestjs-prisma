@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common'
 import {
   Args,
   Int,
@@ -5,8 +6,10 @@ import {
   Parent,
   Query,
   ResolveField,
-  Resolver
+  Resolver,
+  Subscription
 } from '@nestjs/graphql'
+import { PubSub, PubSubEngine } from 'apollo-server-express'
 import { AuthorEntity } from '../../decorators/author.decorator'
 import { GetAuthorArgs } from '../../models/args/get-author.args'
 import { Author } from '../../models/author.model'
@@ -14,6 +17,8 @@ import { Post } from '../../models/post.model'
 import { AuthorService } from '../../services/author.service'
 import { PostService } from '../../services/post.service'
 import { UpdatePostInput } from './dto/update.input'
+
+const pubSub = new PubSub()
 
 @Resolver((of) => Author)
 export class AuthorResolver {
@@ -29,8 +34,10 @@ export class AuthorResolver {
 
   @Query((returns) => Author, { name: 'author' })
   async getAuthor(@Args() args: GetAuthorArgs): Promise<Author> {
-    console.log(args)
-    return this.authorService.findOneById(args)
+    const author = await this.authorService.findOneById(args)
+    console.log(author)
+
+    return author
   }
 
   // @ResolveField()
@@ -43,6 +50,14 @@ export class AuthorResolver {
   async updatePost(
     @Args('upDatePostData') upDatePostData: UpdatePostInput
   ): Promise<Author> {
-    return this.postService.updateById(upDatePostData)
+    const author = await this.postService.updateById(upDatePostData)
+    pubSub.publish('userLogin', { userLogin: author })
+    console.log(author)
+    return author
+  }
+
+  @Subscription((returns) => Author)
+  userLogin() {
+    return pubSub.asyncIterator('userLogin')
   }
 }

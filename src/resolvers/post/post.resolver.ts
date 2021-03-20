@@ -2,15 +2,30 @@ import { PrismaService } from './../../services/prisma.service'
 import { PaginationArgs } from '../../common/pagination/pagination.args'
 import { PostIdArgs } from '../../models/args/post-id.args'
 import { UserIdArgs } from '../../models/args/user-id.args'
-import { Resolver, Query, Parent, Args, ResolveField } from '@nestjs/graphql'
+import {
+  Resolver,
+  Query,
+  Parent,
+  Args,
+  ResolveField,
+  Mutation,
+  Int
+} from '@nestjs/graphql'
 import { Post } from '../../models/post.model'
 import { PostOrder } from '../../models/inputs/post-order.input'
 import { findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection'
 import { PostConnection } from '../../models/pagination/post-connection.model'
+import { PostService } from '../../services/post.service'
+import { Inject } from '@nestjs/common'
+import { PubSubEngine } from 'apollo-server-express'
 
 @Resolver((of) => Post)
 export class PostResolver {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly postService: PostService,
+    @Inject('PUB_SUB') private pubSub: PubSubEngine
+  ) {}
 
   @Query((returns) => PostConnection)
   async publishedPosts(
@@ -70,5 +85,17 @@ export class PostResolver {
   @ResolveField()
   async author(@Parent() post: Post) {
     return this.prisma.post.findUnique({ where: { id: post.id } }).author()
+  }
+
+  @Mutation((returns) => Post)
+  async addComment(
+    @Args('postId', { type: () => Int }) postId: number,
+    @Args('comment', { type: () => String }) comment: string
+  ) {
+    const newComment = this.postService.addComment({
+      id: postId,
+      comment: comment
+    })
+    return newComment
   }
 }
