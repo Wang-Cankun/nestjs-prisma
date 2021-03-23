@@ -35,8 +35,6 @@ export class AuthorResolver {
   @Query((returns) => Author, { name: 'author' })
   async getAuthor(@Args() args: GetAuthorArgs): Promise<Author> {
     const author = await this.authorService.findOneById(args)
-    console.log(author)
-
     return author
   }
 
@@ -52,7 +50,6 @@ export class AuthorResolver {
   ): Promise<Author> {
     const author = await this.postService.updateById(upDatePostData)
     pubSub.publish('userLogin', { userLogin: author })
-    console.log(author)
     return author
   }
 
